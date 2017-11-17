@@ -1,6 +1,6 @@
 # Guardian Onetime
 
-**TODO: Add description**
+An alternative token implementation for [Guardian](https://github.com/ueberauth/guardian) that provides a tracked single-use token.
 
 ## Installation
 
@@ -18,5 +18,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/guardian_onetime](https://hexdocs.pm/guardian_onetime).
-
->>>>>>> e4f71cd... Initial Mix project
