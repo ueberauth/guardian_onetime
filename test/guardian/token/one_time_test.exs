@@ -3,12 +3,12 @@ defmodule Guardian.Token.OneTimeTest do
 
   use ExUnit.Case
 
-  alias Guardian.Token.OneTime.Repo
+  alias GuardianOneTime.Repo
 
   defmodule Impl do
     use Guardian.Token.OneTime,
-      otp_app: :guardian,
-      repo: Guardian.Token.OneTime.Repo,
+      otp_app: :guardian_onetime,
+      repo: GuardianOneTime.Repo,
       token_table: "one_time_tokens"
 
     def subject_for_token(%{id: id}, _), do: {:ok, to_string(id)}

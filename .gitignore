@@ -1,5 +1,7 @@
-
 # Created by https://www.gitignore.io/api/elixir,osx,vim
+
+### Local config ###
+.envrc
 
 ### Elixir ###
 /_build

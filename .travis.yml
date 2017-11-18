@@ -8,9 +8,14 @@ otp_release:
   - 20.0
   - 19.3
 
+services:
+  - postgresql
+
 env:
   global:
     - MIX_ENV=test
+    - POSTGRES_USER="postgres"
+    - POSTGRES_PASS=""
 
 notifications:
   email: false
@@ -19,4 +24,3 @@ sudo: false
 
 script:
   - mix test
-  - mix credo
