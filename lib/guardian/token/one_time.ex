@@ -10,9 +10,10 @@ defmodule Guardian.Token.OneTime do
 
   ```elixir
   defmodule MyApp.OneTimeToken do
-  use GuardianOneTime, otp_app: :my_app,
-                       repo: MyApp.Repo,
-                       token_table: "one_time_tokens"
+  use Guardian.Token.OneTime,
+    otp_app: :my_app,
+    repo: MyApp.Repo,
+    token_table: "one_time_tokens"
 
   def subject_for_token(%{id: id}, _), do: {:ok, to_string(id)}
   def resource_from_claims(%{"sub" => id}), do: {:ok, %{id: id}}
