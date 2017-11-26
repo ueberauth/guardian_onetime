@@ -18,7 +18,10 @@ defmodule GuardianOnetime.Mixfile do
       description: "A single use token implementation for Guardian",
       homepage_url: @url,
       start_permanent: Mix.env == :prod,
-      deps: deps()
+      aliases: aliases(),
+      deps: deps(),
+      elixirc_paths: elixirc_paths(Mix.env),
+      package: package(),
     ]
   end
 
@@ -28,6 +31,10 @@ defmodule GuardianOnetime.Mixfile do
     ]
   end
 
+  defp aliases do
+    ["test": ["ecto.create --quiet", "ecto.migrate", "test"]]
+  end
+
   defp deps do
     [
       {:guardian, "~> 1.0"},
@@ -35,6 +42,9 @@ defmodule GuardianOnetime.Mixfile do
       {:postgrex, "~> 0.13"},
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   defp package do
     [

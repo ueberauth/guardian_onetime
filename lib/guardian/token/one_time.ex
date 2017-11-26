@@ -10,9 +10,10 @@ defmodule Guardian.Token.OneTime do
 
   ```elixir
   defmodule MyApp.OneTimeToken do
-  use Guardian.Token.OneTime, otp_app: :my_app,
-  repo: MyApp.Repo,
-  token_table: "one_time_tokens"
+  use Guardian.Token.OneTime,
+    otp_app: :my_app,
+    repo: MyApp.Repo,
+    token_table: "one_time_tokens"
 
   def subject_for_token(%{id: id}, _), do: {:ok, to_string(id)}
   def resource_from_claims(%{"sub" => id}), do: {:ok, %{id: id}}
@@ -35,18 +36,18 @@ defmodule Guardian.Token.OneTime do
 
   ```elixir
   # Create a token
-  {:ok, token, _claims} = MyApp.OneTimeToken(my_resource)
+  {:ok, token, _claims} = MyApp.OneTimeToken.encode_and_sign(my_resource)
 
   # Create a token with custom data alongside the resource
-  {:ok, token, _claims} = MyApp.OneTimeToken(my_resource, %{some: "data"})
+  {:ok, token, _claims} = MyApp.OneTimeToken.encode_and_sign(my_resource, %{some: "data"})
 
   # Create a token with an explicit ttl
-  {:ok, token, _claims} = MyApp.OneTimeToken(my_resource, %{some: "data"}, ttl: {2, :hours})
-  {:ok, token, _claims} = MyApp.OneTimeToken(my_resource, %{some: "data"}, ttl: {2, :days})
-  {:ok, token, _claims} = MyApp.OneTimeToken(my_resource, %{some: "data"}, ttl: {2, :weeks})
+  {:ok, token, _claims} = MyApp.OneTimeToken.encode_and_sign(my_resource, %{some: "data"}, ttl: {2, :hours})
+  {:ok, token, _claims} = MyApp.OneTimeToken.encode_and_sign(my_resource, %{some: "data"}, ttl: {2, :days})
+  {:ok, token, _claims} = MyApp.OneTimeToken.encode_and_sign(my_resource, %{some: "data"}, ttl: {2, :weeks})
 
   # Create a token with an explicit expiry
-  {:ok, token, _claims} = MyApp.OneTimeToken(my_resource, %{some: "data"}, expiry: some_datetime_in_utc)
+  {:ok, token, _claims} = MyApp.OneTimeToken.encode_and_sign(my_resource, %{some: "data"}, expiry: some_datetime_in_utc)
 
   # Consume a token
   {:ok, claims} = MyApp.OneTimeToken.decode_and_verify(token)
@@ -60,9 +61,26 @@ defmodule Guardian.Token.OneTime do
   """
   @behaviour Guardian.Token
 
-  import Ecto.Query, only: [from: 2]
+  use Ecto.Schema
 
-  alias Guardian.Schema.OneTimeToken
+  import Ecto.Query, only: [from: 2]
+  import Ecto.Changeset
+
+  alias Guardian.Token.OneTime, as: Token
+
+  @primary_key false
+  schema "abstract_table: tokens" do
+    field :id, :string
+    field :claims, :map, default: %{}
+    field :expiry, :utc_datetime
+  end
+
+  def changeset(params) do
+    %Token{}
+    |> cast(params, [:id, :claims, :expiry])
+    |> validate_required([:id])
+  end
+
   defmacro __using__(opts \\ []) do
     opts = [token_module: Guardian.Token.OneTime] ++ opts
 
@@ -101,7 +119,7 @@ defmodule Guardian.Token.OneTime do
   def create_token(mod, claims, opts) do
     data = %{id: token_id(), claims: claims, expiry: find_expiry(mod, claims, opts)}
 
-    result = mod.repo.insert_all({mod.token_table, OneTimeToken}, [data])
+    result = mod.repo.insert_all({mod.token_table, Token}, [data])
 
     case result do
       {1, _} ->
