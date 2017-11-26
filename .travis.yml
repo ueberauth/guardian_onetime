@@ -22,7 +22,7 @@ env:
 notifications:
   email: false
 
-sudo: false
+sudo: true
 
 script:
   - mix test
