@@ -63,6 +63,7 @@ defmodule Guardian.Token.OneTime do
   import Ecto.Query, only: [from: 2]
 
   alias Guardian.Schema.OneTimeToken
+
   defmacro __using__(opts \\ []) do
     opts = [token_module: Guardian.Token.OneTime] ++ opts
 
@@ -200,6 +201,7 @@ defmodule Guardian.Token.OneTime do
         where: is_nil(t.expiry) or t.expiry >= ^expiring_after,
         where: t.id == ^token
       )
+
     mod.repo.one(query)
   end
 end

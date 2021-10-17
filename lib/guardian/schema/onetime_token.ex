@@ -8,9 +8,9 @@ defmodule Guardian.Schema.OneTimeToken do
   @primary_key false
 
   schema "abstract_table: tokens" do
-    field :id, :string
-    field :claims, :map, default: %{}
-    field :expiry, :utc_datetime
+    field(:id, :string)
+    field(:claims, :map, default: %{})
+    field(:expiry, :utc_datetime)
   end
 
   def changeset(params) do
