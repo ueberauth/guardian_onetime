@@ -4,6 +4,7 @@ defmodule Guardian.Schema.OneTimeToken do
   use Ecto.Schema
 
   import Ecto.Changeset
+  alias Guardian.Schema.OneTimeToken
 
   @primary_key false
 
