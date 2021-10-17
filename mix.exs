@@ -32,7 +32,8 @@ defmodule GuardianOnetime.Mixfile do
     [
       {:guardian, "~> 1.0"},
       {:ecto, "~> 2.2"},
-      {:postgrex, "~> 0.13"}
+      {:postgrex, "~> 0.13"},
+      {:credo, ">= 0.0.0", only: [:dev, :test], runtime: false}
     ]
   end
 
